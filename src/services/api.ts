@@ -1,5 +1,5 @@
-const API_BASE_URL = 'https://sporthub.paclema.com';
-const API_KEY = 'b1m5QHRqUpSXGzkE03NyxfCq3Km7nA21IKFloqeg3CQPXjILDOtjBJ8yO8LX4eal';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://sporthub.paclema.com';
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export interface ApiResponse<T> {
   data: T;
@@ -95,6 +95,11 @@ class ApiService {
 
 // Create and export a singleton instance
 export const apiService = new ApiService(API_BASE_URL, API_KEY);
+
+// Validate that API key is available
+if (!API_KEY) {
+  console.error('VITE_API_KEY is not defined in environment variables');
+}
 
 // Export the class for testing or custom instances
 export { ApiService };
