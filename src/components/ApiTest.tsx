@@ -4,8 +4,8 @@ import { useApiGet } from '../hooks/useApi';
 // Define the expected response type based on the backend API
 interface TestResponse {
   message?: string;
-  data?: any;
-  status?: string;
+  data?: unknown;
+  status?: number | string;
 }
 
 interface ApiTestProps {
@@ -100,13 +100,15 @@ export const ApiTest: React.FC<ApiTestProps> = ({
               <div className="bg-green-50 border border-green-200 rounded-md p-3">
                 <h4 className="text-sm font-medium text-green-800 mb-2">Success</h4>
                 <div className="text-sm text-green-700">
-                  <p className="mb-2">Status: {data.status}</p>
+                  <p className="mb-2">
+                    Status: {(data as unknown as { status?: number | string })?.status !== undefined ? (data as unknown as { status?: number | string }).status : 'N/A'}
+                  </p>
                   <details className="mt-2">
                     <summary className="cursor-pointer text-xs text-green-600 hover:text-green-800">
                       View Response Data
                     </summary>
                     <pre className="mt-2 text-xs bg-green-100 p-2 rounded overflow-auto max-h-40">
-                      {JSON.stringify(data.data, null, 2)}
+                      {JSON.stringify(data as unknown as { data?: unknown }, null, 2)}
                     </pre>
                   </details>
                 </div>

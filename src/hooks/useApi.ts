@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiService, ApiResponse, ApiError } from '../services/api';
+import { apiService } from '../services/api';
+import type { ApiResponse, ApiError } from '../services/api';
 
 // Generic hook for GET requests
 export function useApiGet<T>(
@@ -16,12 +17,12 @@ export function useApiGet<T>(
     queryFn: () => apiService.get<T>(endpoint),
     enabled: options?.enabled ?? true,
     staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutes
-    cacheTime: options?.cacheTime ?? 10 * 60 * 1000, // 10 minutes
+    gcTime: options?.cacheTime ?? 10 * 60 * 1000, // 10 minutes
   });
 }
 
 // Generic hook for POST requests
-export function useApiPost<T, D = any>(
+export function useApiPost<T, D = unknown>(
   endpoint: string,
   options?: {
     onSuccess?: (data: ApiResponse<T>) => void;
@@ -36,7 +37,7 @@ export function useApiPost<T, D = any>(
 }
 
 // Generic hook for PUT requests
-export function useApiPut<T, D = any>(
+export function useApiPut<T, D = unknown>(
   endpoint: string,
   options?: {
     onSuccess?: (data: ApiResponse<T>) => void;
