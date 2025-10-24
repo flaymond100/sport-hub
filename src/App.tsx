@@ -26,28 +26,11 @@ function App() {
 
           <div className="grid gap-6">
             <ApiTest
-              endpoint="/"
-              title="Root Endpoint"
-              description="Test the root endpoint of the API"
+              endpoint="/classification"
+              title="Classification Endpoint"
+              description="Test the classification endpoint of the API"
             />
             
-            <ApiTest
-              endpoint="/health"
-              title="Health Check"
-              description="Check if the API is healthy and responding"
-            />
-            
-            <ApiTest
-              endpoint="/status"
-              title="Status Endpoint"
-              description="Get the current status of the API"
-            />
-            
-            <ApiTest
-              endpoint="/docs"
-              title="API Documentation"
-              description="Access the API documentation endpoint"
-            />
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { apiService } from '../services/api';
 import type { ApiResponse, ApiError } from '../services/api';
 
@@ -21,56 +21,4 @@ export function useApiGet<T>(
   });
 }
 
-// Generic hook for POST requests
-export function useApiPost<T, D = unknown>(
-  endpoint: string,
-  options?: {
-    onSuccess?: (data: ApiResponse<T>) => void;
-    onError?: (error: ApiError) => void;
-  }
-) {
-  return useMutation<ApiResponse<T>, ApiError, D>({
-    mutationFn: (data: D) => apiService.post<T>(endpoint, data),
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
-  });
-}
 
-// Generic hook for PUT requests
-export function useApiPut<T, D = unknown>(
-  endpoint: string,
-  options?: {
-    onSuccess?: (data: ApiResponse<T>) => void;
-    onError?: (error: ApiError) => void;
-  }
-) {
-  return useMutation<ApiResponse<T>, ApiError, D>({
-    mutationFn: (data: D) => apiService.put<T>(endpoint, data),
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
-  });
-}
-
-// Generic hook for DELETE requests
-export function useApiDelete<T>(
-  endpoint: string,
-  options?: {
-    onSuccess?: (data: ApiResponse<T>) => void;
-    onError?: (error: ApiError) => void;
-  }
-) {
-  return useMutation<ApiResponse<T>, ApiError>({
-    mutationFn: () => apiService.delete<T>(endpoint),
-    onSuccess: options?.onSuccess,
-    onError: options?.onError,
-  });
-}
-
-// Hook for invalidating queries
-export function useInvalidateQueries() {
-  const queryClient = useQueryClient();
-  
-  return (queryKey: string[]) => {
-    queryClient.invalidateQueries({ queryKey });
-  };
-}
