@@ -29,7 +29,6 @@ class ApiService {
     
     const defaultHeaders = {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.apiKey}`,
       'X-API-Key': this.apiKey,
     };
 
