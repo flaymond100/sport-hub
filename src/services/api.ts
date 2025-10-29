@@ -100,6 +100,11 @@ export const apiService = new ApiService(API_BASE_URL, API_KEY);
 // Validate that API key is available
 if (!API_KEY) {
   console.error('VITE_API_KEY is not defined in environment variables');
+  console.error('Current environment:', {
+    NODE_ENV: import.meta.env.MODE,
+    VITE_API_BASE_URL: API_BASE_URL,
+    VITE_API_KEY: API_KEY ? '***' : 'undefined'
+  });
 } else {
   console.log('API key loaded successfully');
 }
