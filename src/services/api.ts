@@ -13,6 +13,8 @@ export interface ApiError {
   status: number;
 }
 
+
+
 class ApiService {
   private baseURL: string;
   private apiKey: string;
