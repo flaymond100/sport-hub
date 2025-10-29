@@ -16,13 +16,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-gray-50">
+       
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-8">
+          <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">Sport Hub</h1>
             <p className="text-gray-600 mt-2">
               Backend API Integration Test
             </p>
-          </header>
+          </div>
 
           <div className="grid gap-6">
             <ApiTest
