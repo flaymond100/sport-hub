@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useApiGet } from '../hooks/useApi';
+import type { ClassificationTableResponse } from '../types';
 
 // Define the expected response type based on the backend API
 interface TestResponse {
   message?: string;
-  data?: unknown;
+  data: ClassificationTableResponse['data'];
   status?: number | string;
 }
 
@@ -39,6 +40,20 @@ export const ApiTest: React.FC<ApiTestProps> = ({
 
   const handleReset = () => {
     setIsTested(false);
+  };
+
+  const response = data?.data;
+
+  console.log(response);
+
+  // Helper function to format milliseconds to hh:mm:ss
+  const formatTime = (ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -96,19 +111,101 @@ export const ApiTest: React.FC<ApiTestProps> = ({
               </div>
             )}
 
-            {data && (
+            {response && (
               <div className="bg-green-50 border border-green-200 rounded-md p-3">
                 <h4 className="text-sm font-medium text-green-800 mb-2">Success</h4>
                 <div className="text-sm text-green-700">
                   <p className="mb-2">
-                    Status: {(data as unknown as { status?: number | string })?.status !== undefined ? (data as unknown as { status?: number | string }).status : 'N/A'}
+                    Status: {response.status !== undefined ? response.status : 'N/A'}
                   </p>
+
+                  {/* Classification Table */}
+                  {response && 'standings' in response && Array.isArray(response.standings) && (
+                    <div className="mt-4">
+                      <h5 className="text-sm font-medium text-green-800 mb-3">Classification Table</h5>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Position
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Tag ID
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Laps
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Total Time
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Gap
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Laps Behind
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Finished
+                              </th>
+                              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                                Last Pass Time
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-200">
+                            {response.standings.map((standing, index) => (
+                              <tr key={standing.tag_id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                <td className="px-4 py-2 text-sm text-gray-900 font-medium">
+                                  {index + 1}
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900 font-mono">
+                                  {standing.tag_id}
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900">
+                                  {standing.laps}
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900">
+                                  {standing.total_time_ms ? formatTime(standing.total_time_ms) : 'N/A'}
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900">
+                                  {standing.gap_ms ? formatTime(standing.gap_ms) : 'N/A'}
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900">
+                                  {standing.laps_behind}
+                                </td>
+                                <td className="px-4 py-2 text-sm">
+                                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                    standing.finished 
+                                      ? 'bg-green-100 text-green-800' 
+                                      : 'bg-yellow-100 text-yellow-800'
+                                  }`}>
+                                    {standing.finished ? 'Yes' : 'No'}
+                                  </span>
+                                </td>
+                                <td className="px-4 py-2 text-sm text-gray-900">
+                                  {standing.last_pass_time ? new Date(standing.last_pass_time).toLocaleTimeString() : 'N/A'}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-600">
+                        Total entries: {"count" in response && typeof response.count === "number"
+                          ? response.count
+                          : Array.isArray(response.standings)
+                            ? response.standings.length
+                            : 0}
+                      </div>
+                    </div>
+                  )}
                   <details className="mt-2">
                     <summary className="cursor-pointer text-xs text-green-600 hover:text-green-800">
-                      View Response Data
+                      View Raw Response Data
                     </summary>
                     <pre className="mt-2 text-xs bg-green-100 p-2 rounded overflow-auto max-h-40">
-                      {JSON.stringify(data as unknown as { data?: unknown }, null, 2)}
+                      {JSON.stringify(response, null, 2)}
                     </pre>
                   </details>
                 </div>
