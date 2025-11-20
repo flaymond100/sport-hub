@@ -10,6 +10,7 @@ export function useApiGet<T>(
     enabled?: boolean;
     staleTime?: number;
     cacheTime?: number;
+    refetchInterval?: number | false;
   }
 ) {
   return useQuery<ApiResponse<T>, ApiError>({
@@ -18,7 +19,6 @@ export function useApiGet<T>(
     enabled: options?.enabled ?? true,
     staleTime: options?.staleTime ?? 5 * 60 * 1000, // 5 minutes
     gcTime: options?.cacheTime ?? 10 * 60 * 1000, // 10 minutes
+    refetchInterval: options?.refetchInterval,
   });
 }
-
-

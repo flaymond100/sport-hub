@@ -1,6 +1,7 @@
-import './App.css'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ApiTest } from './components/ApiTest'
+import './App.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ApiTestManual } from './components/ApiTestManual';
+import { ApiTestAutomative } from './components/ApiTestAutomative';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -10,33 +11,40 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-})
+});
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-gray-50">
-       
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">Sport Hub</h1>
-            <p className="text-gray-600 mt-2">
-              Backend API Integration Test
-            </p>
+            <p className="text-gray-600 mt-2">Backend API Integration Test</p>
           </div>
 
           <div className="grid gap-6">
-            <ApiTest
+            <ApiTestManual
               endpoint="/classification"
               title="Classification Endpoint"
               description="Test the classification endpoint of the API"
             />
-            
+
+            <ApiTestAutomative
+              endpoint="/classification"
+              title="Classification Endpoint"
+              description="Test the classification endpoint of the API"
+            />
+
+            {/* <SocketTest
+              title="Classification Endpoint"
+              description="Test the classification endpoint of the API"
+            /> */}
           </div>
         </div>
       </div>
     </QueryClientProvider>
-  )
+  );
 }
 
-export default App
+export default App;
